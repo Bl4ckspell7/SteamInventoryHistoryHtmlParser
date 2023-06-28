@@ -3,6 +3,7 @@ import csv
 import tkinter as tk
 from tkinter import filedialog
 from unidecode import unidecode
+from tqdm import tqdm  # Import tqdm for the progress bar
 
 try:
     # User selects the HTML file
@@ -12,6 +13,7 @@ try:
 
     # Parse HTML file
     with open(file_path, "r", encoding="utf-8") as file:
+        print("Reading HTML...")
         soup = BeautifulSoup(file, "html.parser")
 
     # Open CSV file for writing
@@ -28,8 +30,16 @@ try:
         ["Date", "Timestamp", "Event Description", "Items Plus/Minus", "Item Name"]
     )
 
+    print("Parsing data...")
+
     # Extract entries and write to CSV
     trade_history_rows = soup.find_all("div", class_="tradehistoryrow")
+
+    # Create a progress bar using tqdm
+    progress_bar = tqdm(
+        total=len(trade_history_rows), bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt}"
+    )
+
     for row in trade_history_rows:
         # TIME ENTRY
         timestamp_element = row.find("div", class_="tradehistory_timestamp")
@@ -62,6 +72,12 @@ try:
         csv_writer.writerow(
             [date, timestamp, event_description, items_plusminus, item_name]
         )
+
+        # Update the progress bar
+        progress_bar.update(1)
+
+    # Close the progress bar
+    progress_bar.close()
 
     # Close CSV file
     csv_file.close()
