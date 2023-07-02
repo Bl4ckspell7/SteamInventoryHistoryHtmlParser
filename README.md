@@ -1,4 +1,4 @@
-# SteamInventoryHistoryHtmlParser
+# Steam Inventory History Html Parser
 Used to save data from "*link_to_your_steam_profile*/inventoryhistory/" to a CSV File.
 
 # How to use:
